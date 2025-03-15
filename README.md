@@ -26,7 +26,7 @@ https://github.com/Trylz/Restir_CPP/blob/main/TestScenes/DragonBuddha/README.txt
 - Cuda toolkit installed. Right now 12.6(https://developer.nvidia.com/cuda-12-6-0-download-archive) is hardcoded
 **set(CMAKE_CUDA_COMPILER "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/bin")** in root **CMakeLists.txt**  
 You may want to change this to your current cuda installation but note that only 12.6 was tested.  
-This mean your **CUDA_PATH** environment variable should look like this **C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6** 
+This mean your **CUDA_PATH** environment variable should look something like this **C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6** 
   
 - An Nvidia GPU since Cuda is used
 - A GPU which supports DirectX Raytracing, such as the NVIDIA Titan V or GeForce RTX
