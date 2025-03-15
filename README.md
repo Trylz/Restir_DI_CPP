@@ -147,4 +147,4 @@ And you get this:
 GIF: https://github.com/user-attachments/assets/e082b290-5991-4bc3-8c07-bc038b04338a
 
 # CONCLUSION
-There is still lot of work to be done to have a production ready implementation. Performance wise a i am getting decent resuts for a raytracer.
+There is still lot of work to be done to have a production ready implementation. Performance wise a i am getting decent results for a raytracer.
