@@ -1,4 +1,4 @@
-# Restir implementation using Nvidia Falcor  
+# Restir DI implementation using Nvidia Falcor  
 
 This repository host a C++ implementation of the Restir algorithm inside Falcor 8.0.
 ![restir_teaser](https://github.com/user-attachments/assets/e2757806-ed91-4eab-91fd-16b60cdad4f5)
