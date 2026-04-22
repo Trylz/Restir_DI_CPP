@@ -18,6 +18,12 @@ The dragon buddha model used is huge. Git doesnt allow me to push files that are
 That model need to be installed has explained here:
 https://github.com/Trylz/Restir_CPP/blob/main/TestScenes/DragonBuddha/README.txt
 
+## Controls
+W, A, S, D, Q, E  
+Z, Q, S, D, A, E for Azerty keyboard  
+
+Mouse left click for rotation.  
+
 ## Building prerequisites
 - Windows 10 version 20H2 (October 2020 Update) or newer, OS build revision .789 or newer
 - Visual Studio 2022
