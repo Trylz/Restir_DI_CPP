@@ -37,22 +37,27 @@ float luma(float3 v)
     return 0.2126f * v.r + 0.7152f * v.g + 0.0722f * v.b;
 }
 
+/*
+float3 evaluateBRDF(float3 N, float3 L, float3 V, float3 diffuse, float3 specular, float roughness)
+{
+    // Diffuse.
+    const float3 diffuseContribution = diffuse / 3.141592653f;
+
+    // Blinn Phong Specular.
+    const float3 H = normalize(L + V);
+    const float NoH = saturate(dot(N, H));
+    const float shininess = max(0.01f, (1.0f - roughness)*256.0f);
+
+    const float specularIntensity = pow(NoH, shininess);
+    const float3 specularContribution = specularIntensity * specular;
+
+    return diffuseContribution * 0.5f + specularContribution * 0.5f; 
+}
+*/
 
 float3 evaluateBRDF(float3 N, float3 L, float3 V, float3 diffuse, float3 specular, float roughness)
 {
     return diffuse / 3.141592653f;
-    /* TODO
-    // Diffuse.
-    const float3 diffuseContribution = diffuse / 3.141592653f;
-
-    // Specular.
-    const float3 H = normalize(L +  V);
-    const float NoH = dot(N, H);
-    const float specularIntensity = pow(saturate(NoH), (1.0f - roughness)*256.0f);
-    const float3 specularContribution = specularIntensity * specular;
-
-    return diffuseContribution + specularContribution; 
-    */
 }
 
 RestirReservoir combineReservoirs(
