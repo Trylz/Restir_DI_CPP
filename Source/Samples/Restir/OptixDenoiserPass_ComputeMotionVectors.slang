@@ -1,6 +1,6 @@
 cbuffer GlobalCB
 {
-    uint2 viewportDims;
+    int2 viewportDims;
     float4x4 previousFrameViewProjMat;
 }
 
@@ -11,7 +11,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
     float4 ndc = mul(P, previousFrameViewProjMat);
     ndc = ndc / ndc.w;
-    float2 s = (ndc.xy + float2(1, 1)) * 0.5f;
+    float2 s = (ndc.xy + float2(1.0f, 1.0f)) * 0.5f;
     s = float2(s.x, 1.f - s.y);
     return (int2)(s * float2(width, height));
 }
@@ -19,7 +19,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
 [numthreads(8, 8, 1)]
 void main(uint3 threadId: SV_DispatchThreadID)
 {
-    const uint2 pixel = threadId.xy;
+    const int2 pixel = (int2)threadId.xy;
     if (any(pixel >= viewportDims))
         return;
 
@@ -33,7 +33,7 @@ void main(uint3 threadId: SV_DispatchThreadID)
     }
 
     int2 prevPixel = getPreviousFramePixelPos(P, (float)viewportDims.x, (float)viewportDims.y);
-    prevPixel = clamp(prevPixel, int2(0, 0), int2(viewportDims.x - 1, viewportDims.y - 1));
+    prevPixel = clamp(prevPixel, int2(0, 0), viewportDims - int2(1, 1));
 
 	gOutBuf[bufIdx] = (float2)(pixel - prevPixel);
 }

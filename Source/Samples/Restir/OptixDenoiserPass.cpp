@@ -329,8 +329,8 @@ void OptixDenoiserPass::computeMotionVectors(RenderContext* pRenderContext, cons
 
     auto var = mpComputeMotionVectors->getRootVar();
 
-    var["GlobalCB"]["viewportDims"] = uint2(mWidth, mHeight);
-    var["GlobalCB"]["previousFrameViewProjMat"] = transpose(mPreviousFrameViewProjMat);
+    var["GlobalCB"]["viewportDims"] = int2(mWidth, mHeight);
+    var["GlobalCB"]["previousFrameViewProjMat"] = mPreviousFrameViewProjMat;
 
     var["gInPositionWs"] = GBufferSingleton::instance()->getCurrentPositionWsTexture();
 
