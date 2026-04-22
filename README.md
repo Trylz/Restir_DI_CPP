@@ -114,38 +114,10 @@ It is not recommended when i read the doc. So we may want to denoise the reservo
 # CURRENT ISSUES
 This is work in progress and some artefacts are still visible.
 
-### 1) Light noise on the Arcade scene floor
-<coming soon>
-
-
-### 2) Light flickering on meshes when camera motion.
-
-https://github.com/user-attachments/assets/c2b05582-37ed-4d59-9945-7ed8892f7ba3
-
-**Either my temporal filtering pass doesnt do a good job enough or it is the Optix denoiser**.
-It is more noticeable when camera is far away from objects.
-
-
-
-### 3) Temporal acnee  
-a) Dragon buddha scene   
-GIF: https://github.com/user-attachments/assets/3888a81e-9df1-4b40-9b1a-e8cc7dcd4dfe 
-
-b) Acnee with denoising OFF in Sponza scene  
+### 1) Temporal acnee  
+Acnee with denoising OFF in Sponza scene  
 Video: https://youtu.be/tykjTZ2svXw  
 ![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
-The glitch happens when moving fast then stoping close to an occluder.  
-**This is CAUSED by the temporal filtering (See TemporalFilteringPass.slang). Then amplified by the denoiser**  
-  
-*The following fixes it for the dragon buddha scene WHILE the Sponza scene still exibits it*
-- Apply a blue noise when shading using a reservoir 
-    **shading = shading * min(reservoir.m_W * (4.0f * gBlueNoise[pixelIdx % 470].x), 10.0f);** (ShadingPass.slang)
-- Clamp temporal reservoirs M to smaller value. 5 instead of 20 mentioned in paper
-**previousReservoir.mM = min(5 * currentReservoir.mM, previousReservoir.mM);**   
-
-And you get this:  
-GIF: https://github.com/user-attachments/assets/e082b290-5991-4bc3-8c07-bc038b04338a
-
 # CONCLUSION
-There is still lot of work to be done to have a production ready implementation. Performance wise a i am getting decent results for a raytracer.
+There is still work to be done to have a production ready implementation. Performance wise a i am getting decent results for a raytracer.
