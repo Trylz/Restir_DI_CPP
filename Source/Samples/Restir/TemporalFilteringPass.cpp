@@ -26,7 +26,7 @@ void TemporalFilteringPass::render(Falcor::RenderContext* pRenderContext)
 
     var["PerFrameCB"]["viewportDims"] = uint2(mWidth, mHeight);
     var["PerFrameCB"]["cameraPositionWs"] = mpScene->getCamera()->getPosition();
-    var["PerFrameCB"]["previousFrameViewProjMat"] = transpose(mPreviousFrameViewProjMat);
+    var["PerFrameCB"]["previousFrameViewProjMat"] =  mPreviousFrameViewProjMat;
     var["PerFrameCB"]["nbReservoirPerPixel"] = SceneSettingsSingleton::instance()->nbReservoirPerPixel;
     var["PerFrameCB"]["sampleIndex"] = ++mSampleIndex;
     var["PerFrameCB"]["motion"] = (uint)(mPreviousFrameViewProjMat != mpScene->getCamera()->getViewProjMatrix());
