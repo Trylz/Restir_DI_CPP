@@ -65,8 +65,6 @@ Reservoirs are managed by the reservoir manager. See ReservoirManager.cpp.
 Lights are managed by the light manager. See LightManager.cpp.  
 This is where lights are created for each scene.  
 Right now only spherical(so area) lights are supported.
-![AeraLightsPNG](https://github.com/user-attachments/assets/092bba21-114f-438b-9f6b-09b36b451a47)
-![AeraLights_CloseUp](https://github.com/user-attachments/assets/d50d26fb-47a8-40f8-bf72-5d98b735f511)
 
 ## Settings
 Scenes specific tweaks are stored in the *SceneSettings* struct.  
@@ -117,8 +115,7 @@ It is not recommended when i read the doc. So we may want to denoise the reservo
 This is work in progress and some artefacts are still visible.
 
 ### 1) Light noise on the Arcade scene floor
-![ARCADE](https://github.com/user-attachments/assets/47c35bbe-b046-4dec-9bea-11cdb939db4f)  
-![ARCADE_CloseUp](https://github.com/user-attachments/assets/327c1dae-7782-4276-9aba-8a05c41cf2d3)
+<coming soon>
 
 
 ### 2) Light flickering on meshes when camera motion.
@@ -131,8 +128,7 @@ It is more noticeable when camera is far away from objects.
 
 
 ### 3) Temporal acnee  
-a) Dragon buddha scene  
-![Acnee_Image](https://github.com/user-attachments/assets/a780f519-a4d4-4d55-a3d5-d7881f5f2423)  
+a) Dragon buddha scene   
 GIF: https://github.com/user-attachments/assets/3888a81e-9df1-4b40-9b1a-e8cc7dcd4dfe 
 
 b) Acnee with denoising OFF in Sponza scene  
