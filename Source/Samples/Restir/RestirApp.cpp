@@ -137,7 +137,7 @@ void RestirApp::loadScene(const Fbo* pTargetFbo, RenderContext* pRenderContext)
 
     // Update the controllers
     float radius = mpScene->getSceneBounds().radius();
-    mpScene->setCameraSpeed(radius * 0.25f);
+    mpScene->setCameraSpeed(radius);
     float nearZ = std::max(0.1f, radius / 750.0f);
     float farZ = radius * 10;
     mpCamera->setDepthRange(nearZ, farZ);
