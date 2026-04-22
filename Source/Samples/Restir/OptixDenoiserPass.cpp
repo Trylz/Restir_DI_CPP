@@ -308,7 +308,7 @@ void OptixDenoiserPass::setupDenoiser()
 
     // Allocate/resize some temporary CUDA buffers for internal OptiX processing/state
     mDenoiser.scratchBuffer.resize(mDenoiser.sizes.withoutOverlapScratchSizeInBytes);
-    mDenoiser.stateBuffer.resize(mDenoiser.sizes.stateSizeInBytes);
+    mDenoiser.stateBuffer.resize(mDenoiser.sizes.withoutOverlapScratchSizeInBytes);
 
     // Finish setup of the denoiser
     optixDenoiserSetup(
