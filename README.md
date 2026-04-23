@@ -115,7 +115,6 @@ This is work in progress and some artefacts are still visible.
 
 ### 1) Temporal acnee  
 Acnee with denoising OFF in Sponza scene  
-Video: https://youtu.be/tykjTZ2svXw  
 ![Sponza_Acnee](https://github.com/user-attachments/assets/d65e6419-528f-404f-9d98-11942635c232)  
 
 # CONCLUSION
