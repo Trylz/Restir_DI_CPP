@@ -9,7 +9,7 @@ RWBuffer<float2> gOutBuf;
 
 int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
-    float4 ndc = mul(P, previousFrameViewProjMat);
+    float4 ndc = mul(previousFrameViewProjMat, P);
     ndc = ndc / ndc.w;
     float2 s = (ndc.xy + float2(1.0f, 1.0f)) * 0.5f;
     s = float2(s.x, 1.f - s.y);
