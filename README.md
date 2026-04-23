@@ -27,7 +27,7 @@ Mouse left click for rotation.
 - Windows 10 version 20H2 (October 2020 Update) or newer, OS build revision .789 or newer
 - Visual Studio 2022
 - Cmake
-- [Windows 10 SDK (10.0.19041.0) for Windows 10, version 2004](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/)
+- [Windows 10 SDK (10.0.19041.0) for Windows 10, version 2004](https://go.microsoft.com/fwlink/?linkid=2331862)
 - Cuda toolkit installed. Right now 12.6(https://developer.nvidia.com/cuda-12-6-0-download-archive) is hardcoded
 **set(CMAKE_CUDA_COMPILER "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/bin")** in root **CMakeLists.txt**  
 You may want to change this to your current cuda installation but note that only 12.6 was tested.  
