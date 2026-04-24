@@ -68,7 +68,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         return;
 
     const float currlinearDepth = gCurrentNormalWs[pixel].w;
-    const float prevlinearDepth = gPreviousNormalWs[pixel].w;
+    const float prevlinearDepth = gPreviousNormalWs[previousPixelPos].w;
 
     if (abs(currlinearDepth - prevlinearDepth) > temporalLinearDepthThreshold)
         return;
