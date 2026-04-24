@@ -25,7 +25,7 @@ Mouse left click for rotation.
 
 ## Building prerequisites
 - Windows 10 version 20H2 (October 2020 Update) or newer, OS build revision .789 or newer
-- Visual Studio 2022
+- Visual Studio 2022: https://aka.ms/vs/17/release/vs_community.exe
 - Cmake
 - [Windows 10 SDK (10.0.19041.0) for Windows 10, version 2004](https://go.microsoft.com/fwlink/?linkid=2331862)
 - Cuda toolkit installed. Right now 12.6(https://developer.nvidia.com/cuda-12-6-0-download-archive) is hardcoded
