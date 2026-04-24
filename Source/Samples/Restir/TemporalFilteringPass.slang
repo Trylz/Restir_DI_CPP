@@ -1,6 +1,7 @@
 #include "Light.slangh"
 #include "Reservoir.slangh"
 
+import Scene.Raytracing;
 import Utils.Sampling.TinyUniformSampleGenerator;
 
 cbuffer PerFrameCB
@@ -28,6 +29,15 @@ Texture2D<float4> gPreviousNormalWs;
 Texture2D<float4> gAlbedo;
 Texture2D<float4> gSpecular;
 
+struct PrimaryRayData
+{
+    bool dummy;
+};
+
+struct ShadowRayData
+{
+    bool hit;
+};
 
 [shader("closesthit")]
 void primaryClosestHit(inout PrimaryRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
@@ -67,7 +77,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
 
 [shader("raygeneration")] void rayGen()
 {
-    const uint2 pixel = threadId.xy;
+    const uint2 pixel = DispatchRaysIndex().xy;
     if (any(pixel >= viewportDims))
         return;
 
@@ -127,7 +137,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
             previousReservoir.mM = min(20 * currentReservoir.mM, previousReservoir.mM);
 
             // Check visibility: Unbiased Restir.
-            float3 L = r.mY.mLightSamplePosition - currP;
+            float3 L = previousReservoir.mY.mLightSamplePosition - currP;
             const float Llen = length(L);
             L /= Llen;
 
