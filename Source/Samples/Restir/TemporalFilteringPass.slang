@@ -28,6 +28,34 @@ Texture2D<float4> gPreviousNormalWs;
 Texture2D<float4> gAlbedo;
 Texture2D<float4> gSpecular;
 
+
+[shader("closesthit")]
+void primaryClosestHit(inout PrimaryRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
+{
+}
+
+[shader("anyhit")]
+void primaryAnyHit(inout PrimaryRayData rayData, BuiltInTriangleIntersectionAttributes attribs)
+{
+}
+
+[shader("miss")]
+void primaryMiss(inout PrimaryRayData hitData)
+{
+}
+
+[shader("miss")]
+void shadowMiss(inout ShadowRayData hitData)
+{
+    hitData.hit = false;
+}
+
+[shader("anyhit")]
+void shadowAnyHit(inout ShadowRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
+{
+    hitData.hit = true;
+}
+
 int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
     float4 ndc = mul(previousFrameViewProjMat, P);
@@ -37,8 +65,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
     return (int2)(s * float2(width, height));
 }
 
-[numthreads(16, 16, 1)] void TemporalFilteringPass(uint3 threadId
-                                                   : SV_DispatchThreadID)
+[shader("raygeneration")] void rayGen()
 {
     const uint2 pixel = threadId.xy;
     if (any(pixel >= viewportDims))
@@ -93,16 +120,42 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
     for (uint i = 0; i < nbReservoirPerPixel; ++i)
     {
         RestirReservoir currentReservoir = gCurrentFrameReservoirs[currentPixelReservoirsStart + i];
-
         RestirReservoir previousReservoir = gPreviousFrameReservoirs[previousPixelReservoirsStart + i];
         if (motion > 0)
         {
             // Clamp M according to paper.
             previousReservoir.mM = min(20 * currentReservoir.mM, previousReservoir.mM);
+
+            // Check visibility: Unbiased Restir.
+            float3 L = r.mY.mLightSamplePosition - currP;
+            const float Llen = length(L);
+            L /= Llen;
+
+            RayDesc ray;
+            ray.Origin = currP;
+            ray.Direction = L;
+            ray.TMin = 0.001f;
+            ray.TMax = Llen;
+
+            ShadowRayData rayData;
+            rayData.hit = true;
+            TraceRay(gScene.rtAccel, RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH, 0xFF, 1 /* ray index */, rayTypeCount, 1, ray, rayData);
+
+            if (rayData.hit)
+            {
+                previousReservoir.m_W = 0.0f;
+            }
         }
 
         gCurrentFrameReservoirs[currentPixelReservoirsStart + i] =
             combineReservoirs(currentReservoir, previousReservoir, currP, currN, V, diffuse, specular, roughness, rng);
     }
 }
+
+
+
+
+
+
+
 

@@ -56,8 +56,6 @@ void shadowAnyHit(inout ShadowRayData hitData, BuiltInTriangleIntersectionAttrib
     hitData.hit = true;
 }
 
-
-
 int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
     float4 ndc = mul(previousFrameViewProjMat, P);
@@ -145,10 +143,8 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
 
             if (rayData.hit)
             {
-                gReservoirs[reservoirsStart + i].m_W = 0.0f;
-                gReservoirs[reservoirsStart + i].m_hitDistance = Llen;
+                previousReservoir.m_W = 0.0f;
             }
-
         }
 
         gCurrentFrameReservoirs[currentPixelReservoirsStart + i] =
