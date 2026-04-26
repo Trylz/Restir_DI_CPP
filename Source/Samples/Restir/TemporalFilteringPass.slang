@@ -30,7 +30,7 @@ Texture2D<float4> gSpecular;
 
 int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
-    float4 ndc = mul(P, previousFrameViewProjMat);
+    float4 ndc = mul(previousFrameViewProjMat, P);
     ndc = ndc / ndc.w;
     float2 s = (ndc.xy + float2(1, 1)) * 0.5f;
     s = float2(s.x, 1.f - s.y);
@@ -68,7 +68,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         return;
 
     const float currlinearDepth = gCurrentNormalWs[pixel].w;
-    const float prevlinearDepth = gPreviousNormalWs[pixel].w;
+    const float prevlinearDepth = gPreviousNormalWs[previousPixelPos].w;
 
     if (abs(currlinearDepth - prevlinearDepth) > temporalLinearDepthThreshold)
         return;
@@ -97,8 +97,8 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         RestirReservoir previousReservoir = gPreviousFrameReservoirs[previousPixelReservoirsStart + i];
         if (motion > 0)
         {
-            // Clamp M according to paper. But use a smaller value(5) since it gives better results.
-            previousReservoir.mM = min(5 * currentReservoir.mM, previousReservoir.mM);
+            // Clamp M according to paper.
+            previousReservoir.mM = min(20 * currentReservoir.mM, previousReservoir.mM);
         }
 
         gCurrentFrameReservoirs[currentPixelReservoirsStart + i] =
