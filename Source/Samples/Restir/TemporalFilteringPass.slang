@@ -95,7 +95,9 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         return;
 
     const float3 prevP = gPreviousPositionWs[previousPixelPos].xyz;
-    if (length(prevP - currP) > temporalWsRadiusThreshold)
+
+    const float positionalThreshold = dot(prevP - currP, prevP - currP);
+    if (positionalThreshold > temporalWsRadiusThreshold * temporalWsRadiusThreshold)
         return;
 
     const float3 currN = gCurrentNormalWs[pixel].xyz;
