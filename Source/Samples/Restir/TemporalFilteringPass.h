@@ -17,12 +17,16 @@ public:
     void render(Falcor::RenderContext* pRenderContext);
 
 private:
+    void compileProgram(Falcor::ref<Falcor::Device> pDevice);
+
     Falcor::ref<Falcor::Scene> mpScene;
 
     uint32_t mWidth;
     uint32_t mHeight;
     Falcor::float4x4 mPreviousFrameViewProjMat;
     uint32_t mSampleIndex = 0u;
-    Falcor::ref<Falcor::ComputePass> mpTemporalFilteringPass;
+
+    Falcor::ref<Falcor::Program> mpTemporalFilteringPass;
+    Falcor::ref<Falcor::RtProgramVars> mpRtVars;
 };
 } // namespace Restir
