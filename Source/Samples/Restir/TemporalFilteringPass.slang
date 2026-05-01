@@ -1,6 +1,7 @@
 #include "Light.slangh"
 #include "Reservoir.slangh"
 
+import Scene.Raytracing;
 import Utils.Sampling.TinyUniformSampleGenerator;
 
 cbuffer PerFrameCB
@@ -28,19 +29,55 @@ Texture2D<float4> gPreviousNormalWs;
 Texture2D<float4> gAlbedo;
 Texture2D<float4> gSpecular;
 
+struct PrimaryRayData
+{
+    bool dummy;
+};
+
+struct ShadowRayData
+{
+    bool hit;
+};
+
+[shader("closesthit")]
+void primaryClosestHit(inout PrimaryRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
+{
+}
+
+[shader("anyhit")]
+void primaryAnyHit(inout PrimaryRayData rayData, BuiltInTriangleIntersectionAttributes attribs)
+{
+}
+
+[shader("miss")]
+void primaryMiss(inout PrimaryRayData hitData)
+{
+}
+
+[shader("miss")]
+void shadowMiss(inout ShadowRayData hitData)
+{
+    hitData.hit = false;
+}
+
+[shader("anyhit")]
+void shadowAnyHit(inout ShadowRayData hitData, BuiltInTriangleIntersectionAttributes attribs)
+{
+    hitData.hit = true;
+}
+
 int2 getPreviousFramePixelPos(float4 P, float width, float height)
 {
-    float4 ndc = mul(P, previousFrameViewProjMat);
+    float4 ndc = mul(previousFrameViewProjMat, P);
     ndc = ndc / ndc.w;
     float2 s = (ndc.xy + float2(1, 1)) * 0.5f;
     s = float2(s.x, 1.f - s.y);
     return (int2)(s * float2(width, height));
 }
 
-[numthreads(16, 16, 1)] void TemporalFilteringPass(uint3 threadId
-                                                   : SV_DispatchThreadID)
+[shader("raygeneration")] void rayGen()
 {
-    const uint2 pixel = threadId.xy;
+    const uint2 pixel = DispatchRaysIndex().xy;
     if (any(pixel >= viewportDims))
         return;
 
@@ -58,7 +95,9 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         return;
 
     const float3 prevP = gPreviousPositionWs[previousPixelPos].xyz;
-    if (length(prevP - currP) > temporalWsRadiusThreshold)
+
+    const float positionalThreshold = dot(prevP - currP, prevP - currP);
+    if (positionalThreshold > temporalWsRadiusThreshold * temporalWsRadiusThreshold)
         return;
 
     const float3 currN = gCurrentNormalWs[pixel].xyz;
@@ -68,7 +107,7 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
         return;
 
     const float currlinearDepth = gCurrentNormalWs[pixel].w;
-    const float prevlinearDepth = gPreviousNormalWs[pixel].w;
+    const float prevlinearDepth = gPreviousNormalWs[previousPixelPos].w;
 
     if (abs(currlinearDepth - prevlinearDepth) > temporalLinearDepthThreshold)
         return;
@@ -93,16 +132,42 @@ int2 getPreviousFramePixelPos(float4 P, float width, float height)
     for (uint i = 0; i < nbReservoirPerPixel; ++i)
     {
         RestirReservoir currentReservoir = gCurrentFrameReservoirs[currentPixelReservoirsStart + i];
-
         RestirReservoir previousReservoir = gPreviousFrameReservoirs[previousPixelReservoirsStart + i];
         if (motion > 0)
         {
-            // Clamp M according to paper. But use a smaller value(5) since it gives better results.
-            previousReservoir.mM = min(5 * currentReservoir.mM, previousReservoir.mM);
+            // Clamp M according to paper.
+            previousReservoir.mM = min(20 * currentReservoir.mM, previousReservoir.mM);
+
+            // Check visibility: Unbiased Restir.
+            float3 L = previousReservoir.mY.mLightSamplePosition - currP;
+            const float Llen = length(L);
+            L /= Llen;
+
+            RayDesc ray;
+            ray.Origin = currP;
+            ray.Direction = L;
+            ray.TMin = 0.001f;
+            ray.TMax = Llen;
+
+            ShadowRayData rayData;
+            rayData.hit = true;
+            TraceRay(gScene.rtAccel, RAY_FLAG_ACCEPT_FIRST_HIT_AND_END_SEARCH, 0xFF, 1 /* ray index */, rayTypeCount, 1, ray, rayData);
+
+            if (rayData.hit)
+            {
+                previousReservoir.m_W = 0.0f;
+            }
         }
 
         gCurrentFrameReservoirs[currentPixelReservoirsStart + i] =
             combineReservoirs(currentReservoir, previousReservoir, currP, currN, V, diffuse, specular, roughness, rng);
     }
 }
+
+
+
+
+
+
+
 
